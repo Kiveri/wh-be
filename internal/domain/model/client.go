@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 type Client struct {
 	ID          int64
 	FirstName   string
@@ -12,18 +10,17 @@ type Client struct {
 	HomeAddress string
 	CompanyID   *int64
 	IsActive    bool
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
 }
 
 func NewClient(
-	firstName, lastName string,
-	patronymic *string,
+	firstName, lastName, email, phone, homeAddress string,
 ) *Client {
 	return &Client{
-		FirstName:  firstName,
-		LastName:   lastName,
-		Patronymic: patronymic,
-		IsActive:   true,
+		FirstName:   firstName,
+		LastName:    lastName,
+		Email:       email,
+		Phone:       phone,
+		HomeAddress: homeAddress,
+		IsActive:    true,
 	}
 }

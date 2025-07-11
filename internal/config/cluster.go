@@ -10,15 +10,30 @@ import (
 )
 
 func DSN() string {
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	log.Println("failed to load .env file")
+	//}
+	//
+	//pgDsn := os.Getenv("POSTGRES_PG_DSN")
+	//sslMode := os.Getenv("POSTGRES_SSL_MODE")
+	//
+	//return fmt.Sprintf("%s&sslmode=%s", pgDsn, sslMode)
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Println("failed to load .env file")
 	}
 
-	pgDsn := os.Getenv("POSTGRES_PG_DSN")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	dbname := os.Getenv("POSTGRES_DB")
 	sslMode := os.Getenv("POSTGRES_SSL_MODE")
 
-	return fmt.Sprintf("%s&sslmode=%s", pgDsn, sslMode)
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		host, port, user, password, dbname, sslMode)
 }
 
 type Cluster struct {
