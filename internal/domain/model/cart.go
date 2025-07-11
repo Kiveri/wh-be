@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 type Cart struct {
 	ID           int64
 	ClientID     int64
@@ -9,8 +7,6 @@ type Cart struct {
 	TotalPrice   int64
 	IsPaid       bool
 	IsActive     bool
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
 }
 
 func NewCart(

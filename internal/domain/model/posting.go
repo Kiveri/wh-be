@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 type PostingStatus uint8
 
 const (
@@ -18,6 +16,4 @@ type Posting struct {
 	PositionsIDs  []int64
 	PostingStatus PostingStatus
 	IsActive      bool
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
 }

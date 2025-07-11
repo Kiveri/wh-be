@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 type Company struct {
 	ID           int64
 	Name         string
@@ -9,8 +7,6 @@ type Company struct {
 	EmployeesIDs []int64
 	LegalAddress string
 	IsActive     bool
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
 }
 
 func NewCompany(

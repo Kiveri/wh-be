@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 type (
 	OrderStatus       uint8
 	OrderDeliveryType uint8
@@ -27,8 +25,6 @@ type Order struct {
 	OrderStatus       OrderStatus
 	OrderDeliveryType OrderDeliveryType
 	IsActive          bool
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
 }
 
 func NewOrder(postingsIDs []int64, status OrderStatus, deliveryType OrderDeliveryType) *Order {

@@ -14,6 +14,7 @@ const (
 
 type Position struct {
 	ID             int64
+	ExternalID     int64
 	Barcode        int64
 	Name           string
 	Manufacturer   string
@@ -23,17 +24,16 @@ type Position struct {
 	ExpirationDate *time.Time
 	IsHasOrder     bool
 	IsActive       bool
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
 }
 
 func NewPosition(
-	barcode int64,
+	externalID, barcode int64,
 	name, manufacturer string,
 	price int64,
 	positionType PositionType,
 ) *Position {
 	return &Position{
+		ExternalID:   externalID,
 		Barcode:      barcode,
 		Name:         name,
 		Manufacturer: manufacturer,
