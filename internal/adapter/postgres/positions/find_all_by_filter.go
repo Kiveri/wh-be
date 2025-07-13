@@ -5,21 +5,21 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Kiveri/wh-be/internal/domain/dto"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
 	"github.com/samber/lo"
 )
 
 var errNoFiltersProvided = errors.New("at least one filter parameter must be provided")
 
-func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindPositionFilter) ([]*model.Position, error) {
+func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindPositionsFilter) ([]*internal_entities.Position, error) {
 	if filter.ID == nil && filter.ExternalID == nil && filter.Barcode == nil &&
 		filter.Name == nil && filter.Manufacturer == nil &&
-		filter.Type == nil && filter.IsHasOrder == nil &&
+		filter.Type == nil && filter.IsHasOrder == nil && filter.OrderID == nil &&
 		filter.IsActive == nil {
 		return nil, fmt.Errorf("repo.findAllByFilter: %w", errNoFiltersProvided)
 	}
 
-	query := `SELECT id, external_id, barcode, name, manufacturer, price, type, production_date, expiration_date, is_has_order, is_active FROM positions WHERE 1=1`
+	query := `SELECT id, external_id, barcode, name, manufacturer, price, type, production_date, expiration_date, is_has_order, order_id, is_active FROM positions WHERE 1=1`
 
 	var args []interface{}
 	var paramCounter = 1
@@ -59,6 +59,11 @@ func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindPositionFilte
 		args = append(args, lo.ToPtr(filter.IsHasOrder))
 		paramCounter++
 	}
+	if filter.OrderID != nil {
+		query += fmt.Sprintf(" AND order_id = $%d", paramCounter)
+		args = append(args, lo.ToPtr(filter.OrderID))
+		paramCounter++
+	}
 	if filter.IsActive != nil {
 		query += fmt.Sprintf(" AND is_active = $%d", paramCounter)
 		args = append(args, lo.ToPtr(filter.IsActive))
@@ -71,9 +76,9 @@ func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindPositionFilte
 	}
 	defer rows.Close()
 
-	var positions []*model.Position
+	var positions []*internal_entities.Position
 	for rows.Next() {
-		var position model.Position
+		var position internal_entities.Position
 		err = rows.Scan(
 			&position.ID,
 			&position.ExternalID,
@@ -85,6 +90,7 @@ func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindPositionFilte
 			&position.ProductionDate,
 			&position.ExpirationDate,
 			&position.IsHasOrder,
+			&position.OrderID,
 			&position.IsActive,
 		)
 		if err != nil {

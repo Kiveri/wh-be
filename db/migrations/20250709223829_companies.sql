@@ -5,7 +5,7 @@ create table companies
     id            bigserial primary key,
     name          text unique   not null,
     inn           bigint unique not null,
-    employees_ids bigint[]      not null default '{}',
+    owners_ids    bigint[]      not null default '{}',
     legal_address text          not null default '',
     type          smallint      not null default 0,
     is_active     boolean       not null default false,

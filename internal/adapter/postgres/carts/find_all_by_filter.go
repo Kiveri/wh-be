@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Kiveri/wh-be/internal/domain/dto"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
 	"github.com/samber/lo"
 )
 
 var errNoFiltersProvided = errors.New("at least one filter parameter must be provided")
 
-func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindCartFilter) ([]*model.Cart, error) {
+func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindCartsFilter) ([]*internal_entities.Cart, error) {
 	if filter.ID == nil && filter.ClientID == nil && filter.IsPaid == nil && filter.IsActive == nil {
 		return nil, fmt.Errorf("repo.FindAllByFilter: %w", errNoFiltersProvided)
 	}
@@ -48,9 +48,9 @@ func (r *Repo) FindAllByFilter(ctx context.Context, filter dto.FindCartFilter) (
 	}
 	defer rows.Close()
 
-	var carts []*model.Cart
+	var carts []*internal_entities.Cart
 	for rows.Next() {
-		var cart model.Cart
+		var cart internal_entities.Cart
 		err = rows.Scan(
 			&cart.ID,
 			&cart.ClientID,

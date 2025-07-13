@@ -2,7 +2,7 @@ package client_usecase
 
 import (
 	"context"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/persons"
 )
 
 type (
@@ -11,7 +11,7 @@ type (
 	}
 
 	clientRepo interface {
-		CreateClient(ctx context.Context, client *model.Client) error
+		CreateClient(ctx context.Context, client *persons.Client) error
 	}
 )
 

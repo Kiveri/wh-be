@@ -3,10 +3,10 @@ package client_usecase
 import (
 	"context"
 	"fmt"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/persons"
 )
 
-type CreateClientReq struct {
+type CreateReq struct {
 	FirstName   string
 	LastName    string
 	Patronymic  *string
@@ -16,8 +16,8 @@ type CreateClientReq struct {
 	CompanyID   *int64
 }
 
-func (u *UseCase) CreateClient(ctx context.Context, req CreateClientReq) error {
-	client := model.NewClient(req.FirstName, req.LastName, req.Email, req.Phone, req.HomeAddress)
+func (u *UseCase) Create(ctx context.Context, req CreateReq) error {
+	client := persons.NewClient(req.FirstName, req.LastName, req.Email, req.Phone, req.HomeAddress)
 
 	if req.Patronymic != nil {
 		client.Patronymic = req.Patronymic

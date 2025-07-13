@@ -2,7 +2,7 @@ package company_usecase
 
 import (
 	"context"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/infra"
 )
 
 type (
@@ -11,7 +11,7 @@ type (
 	}
 
 	companyRepo interface {
-		CreateCompany(ctx context.Context, company *model.Company) error
+		CreateCompany(ctx context.Context, company *infra.Company) error
 	}
 )
 

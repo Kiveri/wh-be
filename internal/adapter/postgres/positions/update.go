@@ -5,7 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Kiveri/wh-be/internal/domain/dto"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
+	"github.com/samber/lo"
 	"strings"
 )
 
@@ -15,14 +16,14 @@ var (
 	errPositionMatching = errors.New("no positions matched the filter")
 )
 
-func (r *Repo) Update(ctx context.Context, position *model.Position, filter dto.UpdatePositionFilter) error {
+func (r *Repo) Update(ctx context.Context, position *internal_entities.Position, filter dto.UpdatePositionFilter) error {
 	if position == nil {
 		return fmt.Errorf("repo.Update: %w", errEmptyPosition)
 	}
 
 	if filter.ExternalID == nil && filter.Barcode == nil &&
 		filter.Name == nil && filter.Manufacturer == nil &&
-		filter.Type == nil && filter.IsHasOrder == nil &&
+		filter.Type == nil && filter.IsHasOrder == nil && filter.OrderID == nil &&
 		filter.IsActive == nil {
 		return fmt.Errorf("repo.Update: %w", errNoFilters)
 	}
@@ -69,6 +70,12 @@ func (r *Repo) Update(ctx context.Context, position *model.Position, filter dto.
 	args = append(args, position.IsHasOrder)
 	paramCounter++
 
+	if position.OrderID != nil {
+		fmt.Fprintf(&sb, ", order_id = $%d", paramCounter)
+		args = append(args, position.OrderID)
+		paramCounter++
+	}
+
 	fmt.Fprintf(&sb, ", is_active = $%d", paramCounter)
 	args = append(args, position.IsActive)
 	paramCounter++
@@ -77,37 +84,42 @@ func (r *Repo) Update(ctx context.Context, position *model.Position, filter dto.
 
 	if filter.ExternalID != nil {
 		fmt.Fprintf(&sb, " AND external_id = $%d", paramCounter)
-		args = append(args, *filter.ExternalID)
+		args = append(args, lo.ToPtr(filter.ExternalID))
 		paramCounter++
 	}
 	if filter.Barcode != nil {
 		fmt.Fprintf(&sb, " AND barcode = $%d", paramCounter)
-		args = append(args, *filter.Barcode)
+		args = append(args, lo.ToPtr(filter.Barcode))
 		paramCounter++
 	}
 	if filter.Name != nil {
 		fmt.Fprintf(&sb, " AND name = $%d", paramCounter)
-		args = append(args, *filter.Name)
+		args = append(args, lo.ToPtr(filter.Name))
 		paramCounter++
 	}
 	if filter.Manufacturer != nil {
 		fmt.Fprintf(&sb, " AND manufacturer = $%d", paramCounter)
-		args = append(args, *filter.Manufacturer)
+		args = append(args, lo.ToPtr(filter.Manufacturer))
 		paramCounter++
 	}
 	if filter.Type != nil {
 		fmt.Fprintf(&sb, " AND type = $%d", paramCounter)
-		args = append(args, *filter.Type)
+		args = append(args, lo.ToPtr(filter.Type))
 		paramCounter++
 	}
 	if filter.IsHasOrder != nil {
 		fmt.Fprintf(&sb, " AND is_has_order = $%d", paramCounter)
-		args = append(args, *filter.IsHasOrder)
+		args = append(args, lo.ToPtr(filter.IsHasOrder))
+		paramCounter++
+	}
+	if filter.OrderID != nil {
+		fmt.Fprintf(&sb, " AND order_id = $%d", paramCounter)
+		args = append(args, lo.ToPtr(filter.OrderID))
 		paramCounter++
 	}
 	if filter.IsActive != nil {
 		fmt.Fprintf(&sb, " AND is_active = $%d", paramCounter)
-		args = append(args, *filter.IsActive)
+		args = append(args, lo.ToPtr(filter.IsActive))
 		paramCounter++
 	}
 

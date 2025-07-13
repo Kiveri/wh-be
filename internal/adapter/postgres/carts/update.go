@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Kiveri/wh-be/internal/domain/dto"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
 	"strings"
 )
 
@@ -15,7 +15,7 @@ var (
 	errCartMatching = errors.New("no carts matched the filter")
 )
 
-func (r *Repo) UpdateCart(ctx context.Context, cart *model.Cart, filter dto.UpdateCartFilter) error {
+func (r *Repo) UpdateCart(ctx context.Context, cart *internal_entities.Cart, filter dto.UpdateCartFilter) error {
 	if cart == nil {
 		return fmt.Errorf("repo.UpdateCart: %w", errEmptyCart)
 	}
