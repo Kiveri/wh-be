@@ -15,6 +15,8 @@ func (sp *ServiceProvider) getCartUseCase(ctx context.Context) *cart_usecase.Use
 	if sp.cartUseCase == nil {
 		sp.cartUseCase = cart_usecase.NewUseCase(
 			sp.getCartRepo(ctx),
+			sp.getPositionRepo(ctx),
+			sp.getTimer(),
 		)
 	}
 

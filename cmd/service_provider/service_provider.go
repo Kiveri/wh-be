@@ -9,7 +9,7 @@ import (
 	"github.com/Kiveri/wh-be/internal/adapter/postgres/positions"
 	"github.com/Kiveri/wh-be/internal/adapter/postgres/postings"
 	"github.com/Kiveri/wh-be/internal/config"
-	"github.com/Kiveri/wh-be/internal/pkg/timer"
+	"github.com/Kiveri/wh-be/internal/pkg"
 	"github.com/Kiveri/wh-be/internal/usecases/cart_usecase"
 	"github.com/Kiveri/wh-be/internal/usecases/client_usecase"
 	"github.com/Kiveri/wh-be/internal/usecases/company_usecase"
@@ -38,7 +38,7 @@ type ServiceProvider struct {
 	positionUseCase *position_usecase.UseCase
 	postingUseCase  *posting_usecase.UseCase
 
-	timer *timer.Timer
+	timer *pkg.Timer
 }
 
 func NewServiceProvider() *ServiceProvider {

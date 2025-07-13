@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 type (
 	OrderStatus       uint8
 	OrderDeliveryType uint8
@@ -22,20 +20,18 @@ const (
 )
 
 type Order struct {
-	ID                int64
-	PostingsIDs       []int64
-	OrderStatus       OrderStatus
-	OrderDeliveryType OrderDeliveryType
-	IsActive          bool
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
+	ID           int64
+	PostingsIDs  []int64
+	Status       OrderStatus
+	DeliveryType OrderDeliveryType
+	IsActive     bool
 }
 
 func NewOrder(postingsIDs []int64, status OrderStatus, deliveryType OrderDeliveryType) *Order {
 	return &Order{
-		PostingsIDs:       postingsIDs,
-		OrderStatus:       status,
-		OrderDeliveryType: deliveryType,
-		IsActive:          true,
+		PostingsIDs:  postingsIDs,
+		Status:       status,
+		DeliveryType: deliveryType,
+		IsActive:     true,
 	}
 }

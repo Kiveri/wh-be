@@ -22,25 +22,20 @@ type Employee struct {
 	IsActive   bool
 	HireDate   time.Time
 	FireDate   *time.Time
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
 }
 
 func NewEmployee(
-	firstName, lastname string,
-	patronymic *string,
-	email, phone string,
+	firstName, lastname, email, phone string,
 	role EmployeeRole,
 	hireDate time.Time,
 ) *Employee {
 	return &Employee{
-		FirstName:  firstName,
-		LastName:   lastname,
-		Patronymic: patronymic,
-		Email:      email,
-		Phone:      phone,
-		Role:       role,
-		IsActive:   true,
-		HireDate:   hireDate,
+		FirstName: firstName,
+		LastName:  lastname,
+		Email:     email,
+		Phone:     phone,
+		Role:      role,
+		IsActive:  true,
+		HireDate:  hireDate,
 	}
 }

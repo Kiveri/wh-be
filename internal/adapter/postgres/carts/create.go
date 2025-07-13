@@ -8,7 +8,7 @@ import (
 
 func (r *Repo) CreateCart(ctx context.Context, cart *model.Cart) error {
 	err := r.cluster.Conn.QueryRow(ctx,
-		"insert into carts (id, client_id, positions_ids, total_price, is_paid, is_active, created_at, updated_at) ",
+		"insert into carts (id, client_id, positions_ids, total_price, is_paid, is_active, created_at, updated_at) values ($1, $2, $3, $4, $5, $6, $7, $8)",
 		cart.ID,
 		cart.ClientID,
 		cart.PositionsIDs,

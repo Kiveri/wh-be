@@ -7,6 +7,7 @@ create table companies
     inn           bigint unique not null,
     employees_ids bigint[]      not null default '{}',
     legal_address text          not null default '',
+    type          smallint      not null default 0,
     is_active     boolean       not null default false,
     created_at    timestamp     not null default now(),
     updated_at    timestamp     not null default now()

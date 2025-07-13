@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type PositionType uint8
 
@@ -14,32 +16,46 @@ const (
 
 type Position struct {
 	ID             int64
+	ExternalID     int64
 	Barcode        int64
 	Name           string
 	Manufacturer   string
 	Price          int64
-	PositionType   PositionType
+	Type           PositionType
 	ProductionDate *time.Time
 	ExpirationDate *time.Time
 	IsHasOrder     bool
 	IsActive       bool
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
 }
 
 func NewPosition(
-	barcode int64,
+	externalID, barcode int64,
 	name, manufacturer string,
 	price int64,
 	positionType PositionType,
 ) *Position {
 	return &Position{
+		ExternalID:   externalID,
 		Barcode:      barcode,
 		Name:         name,
 		Manufacturer: manufacturer,
-		PositionType: positionType,
+		Type:         positionType,
 		Price:        price,
 		IsHasOrder:   false,
 		IsActive:     true,
 	}
+}
+
+func (p *Position) IsPositionNotExpired(now, expDate time.Time) bool {
+	if now.After(expDate) {
+		return false
+	}
+
+	diff := expDate.Sub(now)
+
+	if diff < 30*24*time.Hour {
+		return false
+	}
+
+	return true
 }
