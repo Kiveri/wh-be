@@ -12,6 +12,7 @@ create table positions
     production_date timestamp,
     expiration_date timestamp,
     is_has_order    boolean   not null default false,
+    order_id        bigint,
     is_active       boolean   not null default false,
     created_at      timestamp not null default now(),
     updated_at      timestamp not null default now()

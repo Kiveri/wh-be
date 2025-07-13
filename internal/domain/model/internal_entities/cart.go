@@ -1,4 +1,4 @@
-package model
+package internal_entities
 
 type CartStatus uint8
 
@@ -29,7 +29,7 @@ func NewCart(
 	}
 }
 
-func (c *Cart) AddPositions(id int64) {
+func (c *Cart) AddPosition(id int64) {
 	c.PositionsIDs = append(c.PositionsIDs, id)
 }
 

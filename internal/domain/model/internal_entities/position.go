@@ -1,4 +1,4 @@
-package model
+package internal_entities
 
 import (
 	"time"
@@ -25,6 +25,7 @@ type Position struct {
 	ProductionDate *time.Time
 	ExpirationDate *time.Time
 	IsHasOrder     bool
+	OrderID        *int64
 	IsActive       bool
 }
 
@@ -41,7 +42,6 @@ func NewPosition(
 		Manufacturer: manufacturer,
 		Type:         positionType,
 		Price:        price,
-		IsHasOrder:   false,
 		IsActive:     true,
 	}
 }

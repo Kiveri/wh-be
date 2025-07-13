@@ -1,4 +1,4 @@
-package model
+package persons
 
 type Client struct {
 	ID          int64
@@ -12,9 +12,7 @@ type Client struct {
 	IsActive    bool
 }
 
-func NewClient(
-	firstName, lastName, email, phone, homeAddress string,
-) *Client {
+func NewClient(firstName, lastName, email, phone, homeAddress string) *Client {
 	return &Client{
 		FirstName:   firstName,
 		LastName:    lastName,

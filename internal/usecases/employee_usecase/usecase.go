@@ -2,7 +2,7 @@ package employee_usecase
 
 import (
 	"context"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/persons"
 )
 
 type (
@@ -11,7 +11,7 @@ type (
 	}
 
 	employeeRepo interface {
-		CreateEmployee(ctx context.Context, employee *model.Employee) error
+		CreateEmployee(ctx context.Context, employee *persons.Employee) error
 	}
 )
 

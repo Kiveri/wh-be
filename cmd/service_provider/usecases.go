@@ -57,6 +57,8 @@ func (sp *ServiceProvider) getOrderUseCase(ctx context.Context) *order_usecase.U
 	if sp.orderUseCase == nil {
 		sp.orderUseCase = order_usecase.NewUseCase(
 			sp.getOrderRepo(ctx),
+			sp.getPositionRepo(ctx),
+			sp.getPostingRepo(ctx),
 		)
 	}
 
@@ -77,6 +79,7 @@ func (sp *ServiceProvider) getPostingUseCase(ctx context.Context) *posting_useca
 	if sp.postingUseCase == nil {
 		sp.postingUseCase = posting_usecase.NewUseCase(
 			sp.getPostingRepo(ctx),
+			sp.getCartRepo(ctx),
 		)
 	}
 

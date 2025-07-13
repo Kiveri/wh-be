@@ -1,4 +1,4 @@
-package model
+package infra
 
 type CompanyType uint8
 
@@ -11,7 +11,7 @@ type Company struct {
 	ID           int64
 	Name         string
 	Inn          int64
-	EmployeesIDs []int64
+	OwnersIDs    []int64
 	LegalAddress string
 	Type         CompanyType
 	IsActive     bool
@@ -20,14 +20,14 @@ type Company struct {
 func NewCompany(
 	name string,
 	inn int64,
-	employeesIDs []int64,
+	ownersIDs []int64,
 	legalAddress string,
 	companyType CompanyType,
 ) *Company {
 	return &Company{
 		Name:         name,
 		Inn:          inn,
-		EmployeesIDs: employeesIDs,
+		OwnersIDs:    ownersIDs,
 		LegalAddress: legalAddress,
 		Type:         companyType,
 		IsActive:     true,

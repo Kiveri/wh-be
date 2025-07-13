@@ -1,12 +1,14 @@
 package dto
 
-import "github.com/Kiveri/wh-be/internal/domain/model"
+import (
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
+)
 
 type (
-	FindCartFilter struct {
+	FindCartsFilter struct {
 		ID       *int64
 		ClientID *int64
-		Status   *model.CartStatus
+		Status   *internal_entities.CartStatus
 		IsPaid   *bool
 		IsActive *bool
 	}
@@ -15,19 +17,20 @@ type (
 		ClientID     *int64
 		PositionsIDs []int64
 		TotalPrice   *int64
-		Status       *model.CartStatus
+		Status       *internal_entities.CartStatus
 		IsPaid       *bool
 		IsActive     *bool
 	}
 
-	FindPositionFilter struct {
+	FindPositionsFilter struct {
 		ID           *int64
 		ExternalID   *int64
 		Barcode      *int64
 		Name         *string
 		Manufacturer *string
-		Type         *model.PositionType
+		Type         *internal_entities.PositionType
 		IsHasOrder   *bool
+		OrderID      *int64
 		IsActive     *bool
 	}
 
@@ -36,8 +39,16 @@ type (
 		Barcode      *int64
 		Name         *string
 		Manufacturer *string
-		Type         *model.PositionType
+		Type         *internal_entities.PositionType
 		IsHasOrder   *bool
+		OrderID      *int64
 		IsActive     *bool
+	}
+
+	FindPostingsFilter struct {
+		ID       *int64
+		CartID   *int64
+		Status   *internal_entities.PostingStatus
+		IsActive *bool
 	}
 )

@@ -2,7 +2,7 @@ package position_usecase
 
 import (
 	"context"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
 )
 
 type (
@@ -11,7 +11,7 @@ type (
 	}
 
 	positionRepo interface {
-		CreatePosition(ctx context.Context, position *model.Position) error
+		CreatePosition(ctx context.Context, position *internal_entities.Position) error
 	}
 )
 

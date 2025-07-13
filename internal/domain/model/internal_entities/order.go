@@ -1,4 +1,4 @@
-package model
+package internal_entities
 
 type (
 	OrderStatus       uint8
@@ -6,12 +6,12 @@ type (
 )
 
 const (
-	OrderStatus_UNKNOWN    OrderStatus = 0
 	OrderStatus_CREATED    OrderStatus = 1
 	OrderStatus_BUILDING   OrderStatus = 2
 	OrderStatus_BUILT      OrderStatus = 3
 	OrderStatus_DELIVERING OrderStatus = 4
 	OrderStatus_DELIVERED  OrderStatus = 5
+	OrderStatus_COMPLETED  OrderStatus = 6
 
 	OrderDeliveryType_UNKNOWN      OrderDeliveryType = 0
 	OrderDeliveryType_SELF_PICK_UP OrderDeliveryType = 1
@@ -20,18 +20,28 @@ const (
 )
 
 type Order struct {
-	ID           int64
-	PostingsIDs  []int64
-	Status       OrderStatus
-	DeliveryType OrderDeliveryType
-	IsActive     bool
+	ID              int64
+	ClientID        int64
+	PostingsIDs     []int64
+	Status          OrderStatus
+	DeliveryType    OrderDeliveryType
+	DeliveryAddress string
+	IsActive        bool
 }
 
-func NewOrder(postingsIDs []int64, status OrderStatus, deliveryType OrderDeliveryType) *Order {
+func NewOrder(clientID int64, deliveryType OrderDeliveryType) *Order {
 	return &Order{
-		PostingsIDs:  postingsIDs,
-		Status:       status,
+		ClientID:     clientID,
+		Status:       OrderStatus_CREATED,
 		DeliveryType: deliveryType,
 		IsActive:     true,
 	}
+}
+
+func (o *Order) AddPostings(postings []int64) {
+	o.PostingsIDs = append(o.PostingsIDs, postings...)
+}
+
+func (o *Order) ChangeStatus(status OrderStatus) {
+	o.Status = status
 }

@@ -5,11 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Kiveri/wh-be/internal/domain/dto"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
 	"github.com/samber/lo"
 )
 
-var errNoAvailablePosition = errors.New("no more positions available")
+var (
+	errNoAvailablePosition = errors.New("no more positions available")
+)
 
 type BuildingReq struct {
 	ClientID             int64
@@ -17,9 +19,9 @@ type BuildingReq struct {
 }
 
 func (u *UseCase) Building(ctx context.Context, req BuildingReq) error {
-	carts, err := u.cartRepo.FindAllByFilter(ctx, dto.FindCartFilter{
+	carts, err := u.cartRepo.FindAllByFilter(ctx, dto.FindCartsFilter{
 		ClientID: lo.ToPtr(req.ClientID),
-		Status:   lo.ToPtr(model.CartStatus_BUILDING),
+		Status:   lo.ToPtr(internal_entities.CartStatus_BUILDING),
 		IsActive: lo.ToPtr(true),
 	})
 	if err != nil {
@@ -27,13 +29,13 @@ func (u *UseCase) Building(ctx context.Context, req BuildingReq) error {
 	}
 
 	var (
-		cart      *model.Cart
-		updCart   *model.Cart
-		positions []*model.Position
+		cart      *internal_entities.Cart
+		updCart   *internal_entities.Cart
+		positions []*internal_entities.Position
 	)
 
 	if len(carts) == 0 {
-		cart = model.NewCart(req.ClientID)
+		cart = internal_entities.NewCart(req.ClientID)
 
 		updCart, err = u.addPositionsToExistCart(ctx, cart, positions, req)
 		if err != nil {
@@ -57,13 +59,15 @@ func (u *UseCase) Building(ctx context.Context, req BuildingReq) error {
 	return nil
 }
 
-func (u *UseCase) addPositionsToExistCart(ctx context.Context, cart *model.Cart, positions []*model.Position, req BuildingReq) (*model.Cart, error) {
+func (u *UseCase) addPositionsToExistCart(ctx context.Context, cart *internal_entities.Cart, positions []*internal_entities.Position, req BuildingReq) (*internal_entities.Cart, error) {
 	var (
-		err error
-		now = u.timer.NowMoscow()
+		err                            error
+		now                            = u.timer.NowMoscow()
+		allExpiredByExternalPositionID = true
 	)
+
 	for _, externalID := range req.ExternalPositionsIDs {
-		positions, err = u.positionRepo.FindAllByFilter(ctx, dto.FindPositionFilter{
+		positions, err = u.positionRepo.FindAllByFilter(ctx, dto.FindPositionsFilter{
 			ExternalID: lo.ToPtr(externalID),
 			IsHasOrder: lo.ToPtr(false),
 			IsActive:   lo.ToPtr(true),
@@ -72,23 +76,24 @@ func (u *UseCase) addPositionsToExistCart(ctx context.Context, cart *model.Cart,
 			return nil, fmt.Errorf("positionRepo.FindAllByFilter: %w", err)
 		}
 		if len(positions) == 0 {
-			return nil, fmt.Errorf("%w", errNoAvailablePosition)
+			return nil, fmt.Errorf("%w with externalID %d", errNoAvailablePosition, externalID)
 		}
 		for _, position := range positions {
 			if position.ExpirationDate != nil {
 				checkNotExpired := position.IsPositionNotExpired(now, lo.FromPtr(position.ExpirationDate))
 				if !checkNotExpired {
-					err = u.positionRepo.Update(ctx, position, dto.FindPositionFilter{
+					err = u.positionRepo.Update(ctx, position, dto.UpdatePositionFilter{
 						IsActive: lo.ToPtr(false),
 					})
 					if err != nil {
 						return nil, fmt.Errorf("positionRepo.Update: %w", err)
 					}
 				} else {
-					cart.AddPositions(position.ID)
+					cart.AddPosition(position.ID)
 					cart.IncTotalPrice(position.Price)
+					allExpiredByExternalPositionID = false
 
-					err = u.positionRepo.Update(ctx, position, dto.FindPositionFilter{
+					err = u.positionRepo.Update(ctx, position, dto.UpdatePositionFilter{
 						IsHasOrder: lo.ToPtr(true),
 					})
 					if err != nil {
@@ -97,6 +102,22 @@ func (u *UseCase) addPositionsToExistCart(ctx context.Context, cart *model.Cart,
 
 					break
 				}
+
+				if allExpiredByExternalPositionID {
+					return nil, fmt.Errorf("%w with externalID %d", errNoAvailablePosition, externalID)
+				}
+			} else {
+				cart.AddPosition(position.ID)
+				cart.IncTotalPrice(position.Price)
+
+				err = u.positionRepo.Update(ctx, position, dto.UpdatePositionFilter{
+					IsHasOrder: lo.ToPtr(true),
+				})
+				if err != nil {
+					return nil, fmt.Errorf("positionRepo.Update: %w", err)
+				}
+
+				break
 			}
 		}
 	}

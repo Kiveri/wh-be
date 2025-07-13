@@ -3,10 +3,10 @@ package orders
 import (
 	"context"
 	"fmt"
-	"github.com/Kiveri/wh-be/internal/domain/model"
+	"github.com/Kiveri/wh-be/internal/domain/model/internal_entities"
 )
 
-func (r *Repo) CreateOrder(ctx context.Context, order *model.Order) error {
+func (r *Repo) CreateOrder(ctx context.Context, order *internal_entities.Order) error {
 	err := r.cluster.Conn.QueryRow(ctx,
 		"insert into orders (id, postings_ids, order_status, order_delivery_type, is_active, created_at, updated_at) values ($1, $2, $3, $4, $5, $6, $7)",
 		order.ID,
